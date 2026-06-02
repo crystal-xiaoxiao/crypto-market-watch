@@ -1,0 +1,1083 @@
+{
+  "meta": {
+    "generated_at": "2026-06-02 08:24:24 UTC",
+    "data_date": "2026-06-02",
+    "warnings": [],
+    "sources": {
+      "price": "Binance (data.binance.vision)",
+      "derivatives": "OKX",
+      "sentiment": "alternative.me",
+      "onchain": "bitcoin-data.com",
+      "etf": "farside.co.uk"
+    }
+  },
+  "assets": {
+    "BTC": {
+      "symbol": "BTCUSDT",
+      "name": "Bitcoin",
+      "price": 69940.0,
+      "change_24h": -0.020570265050995018,
+      "change_7d": -0.07888857119866044,
+      "change_30d": -0.10982215916619087,
+      "technical": {
+        "rsi14_d": 27.087171354148836,
+        "rsi14_w": 39.11461906310081,
+        "ma20": 75892.83249999999,
+        "ma50": 77180.8532,
+        "ma100": 73238.677,
+        "ma200": 79293.7492,
+        "ma200w": 61859.840650000006,
+        "macd": -1605.780738839443,
+        "macd_signal": -896.8545607075996,
+        "macd_hist": -708.9261781318435,
+        "boll_mid": 75892.83249999999,
+        "boll_up": 81083.3531929782,
+        "boll_low": 70702.31180702178,
+        "boll_pctb": -0.07343307657486442,
+        "mayer": {
+          "mayer": 0.8820367394104754,
+          "ma200": 79293.7492,
+          "zone": "偏弱 · 趋势之下"
+        }
+      },
+      "derivatives": {
+        "funding": {
+          "rate": 0.0001,
+          "next_rate": null,
+          "source": "OKX"
+        },
+        "open_interest": {
+          "oi_contracts": 3633111.380000021,
+          "oi_ccy": 36331.11380000021,
+          "source": "OKX"
+        },
+        "long_short": {
+          "ratio": 1.91,
+          "history": [
+            {
+              "ts": 1780329600000,
+              "ratio": 1.91
+            },
+            {
+              "ts": 1780243200000,
+              "ratio": 1.59
+            },
+            {
+              "ts": 1780156800000,
+              "ratio": 1.62
+            },
+            {
+              "ts": 1780070400000,
+              "ratio": 1.67
+            },
+            {
+              "ts": 1779984000000,
+              "ratio": 1.94
+            },
+            {
+              "ts": 1779897600000,
+              "ratio": 1.72
+            },
+            {
+              "ts": 1779811200000,
+              "ratio": 1.27
+            },
+            {
+              "ts": 1779724800000,
+              "ratio": 1.08
+            },
+            {
+              "ts": 1779638400000,
+              "ratio": 1.3
+            },
+            {
+              "ts": 1779552000000,
+              "ratio": 1.62
+            },
+            {
+              "ts": 1779465600000,
+              "ratio": 1.49
+            },
+            {
+              "ts": 1779379200000,
+              "ratio": 1.38
+            },
+            {
+              "ts": 1779292800000,
+              "ratio": 1.3
+            },
+            {
+              "ts": 1779206400000,
+              "ratio": 1.51
+            },
+            {
+              "ts": 1779120000000,
+              "ratio": 1.61
+            },
+            {
+              "ts": 1779033600000,
+              "ratio": 1.49
+            },
+            {
+              "ts": 1778947200000,
+              "ratio": 1.47
+            },
+            {
+              "ts": 1778860800000,
+              "ratio": 1.29
+            },
+            {
+              "ts": 1778774400000,
+              "ratio": 0.85
+            },
+            {
+              "ts": 1778688000000,
+              "ratio": 1.15
+            },
+            {
+              "ts": 1778601600000,
+              "ratio": 0.88
+            },
+            {
+              "ts": 1778515200000,
+              "ratio": 0.83
+            },
+            {
+              "ts": 1778428800000,
+              "ratio": 0.8
+            },
+            {
+              "ts": 1778342400000,
+              "ratio": 0.83
+            },
+            {
+              "ts": 1778256000000,
+              "ratio": 0.84
+            },
+            {
+              "ts": 1778169600000,
+              "ratio": 0.8
+            },
+            {
+              "ts": 1778083200000,
+              "ratio": 0.68
+            },
+            {
+              "ts": 1777996800000,
+              "ratio": 0.55
+            },
+            {
+              "ts": 1777910400000,
+              "ratio": 0.67
+            },
+            {
+              "ts": 1777824000000,
+              "ratio": 0.7
+            }
+          ],
+          "source": "OKX"
+        }
+      },
+      "signals": [
+        {
+          "label": "RSI(日)",
+          "state": "bull",
+          "value": "27",
+          "note": "超卖，短期反弹机会"
+        },
+        {
+          "label": "均线结构",
+          "state": "bear",
+          "value": "MA50<MA200",
+          "note": "空头排列（死叉之下）"
+        },
+        {
+          "label": "价 vs MA200",
+          "state": "bear",
+          "value": "-11.8%",
+          "note": "跌破年线"
+        },
+        {
+          "label": "MACD柱",
+          "state": "bear",
+          "value": "-709",
+          "note": "动能向下"
+        },
+        {
+          "label": "资金费率",
+          "state": "neutral",
+          "value": "0.010%",
+          "note": "正常区间"
+        },
+        {
+          "label": "多空账户比",
+          "state": "neutral",
+          "value": "1.91",
+          "note": "未见极端"
+        },
+        {
+          "label": "ETF 5日净流入",
+          "state": "bear",
+          "value": "$-1899m",
+          "note": "场外资金净流出（看空）"
+        }
+      ]
+    },
+    "ETH": {
+      "symbol": "ETHUSDT",
+      "name": "Ethereum",
+      "price": 1982.69,
+      "change_24h": -0.011979688348706552,
+      "change_7d": -0.04392001041581273,
+      "change_30d": -0.1463672959765785,
+      "technical": {
+        "rsi14_d": 29.695185569401673,
+        "rsi14_w": 36.914800210791235,
+        "ma20": 2093.16,
+        "ma50": 2230.8486,
+        "ma100": 2159.7106,
+        "ma200": 2486.73015,
+        "ma200w": 2472.80005,
+        "macd": -67.51904294126143,
+        "macd_signal": -60.577368856255575,
+        "macd_hist": -6.941674085005857,
+        "boll_mid": 2093.16,
+        "boll_up": 2247.5967260725242,
+        "boll_low": 1938.7232739274752,
+        "boll_pctb": 0.1423454355406296,
+        "mayer": {
+          "mayer": 0.7973080633618409,
+          "ma200": 2486.73015,
+          "zone": "深度低估 · 历史抄底区"
+        }
+      },
+      "derivatives": {
+        "funding": {
+          "rate": 0.0001,
+          "next_rate": null,
+          "source": "OKX"
+        },
+        "open_interest": {
+          "oi_contracts": 8027113.830000022,
+          "oi_ccy": 802711.3830000022,
+          "source": "OKX"
+        },
+        "long_short": {
+          "ratio": 3.42,
+          "history": [
+            {
+              "ts": 1780329600000,
+              "ratio": 3.42
+            },
+            {
+              "ts": 1780243200000,
+              "ratio": 2.92
+            },
+            {
+              "ts": 1780156800000,
+              "ratio": 2.63
+            },
+            {
+              "ts": 1780070400000,
+              "ratio": 2.53
+            },
+            {
+              "ts": 1779984000000,
+              "ratio": 3.29
+            },
+            {
+              "ts": 1779897600000,
+              "ratio": 2.94
+            },
+            {
+              "ts": 1779811200000,
+              "ratio": 2.56
+            },
+            {
+              "ts": 1779724800000,
+              "ratio": 2.0
+            },
+            {
+              "ts": 1779638400000,
+              "ratio": 2.27
+            },
+            {
+              "ts": 1779552000000,
+              "ratio": 2.68
+            },
+            {
+              "ts": 1779465600000,
+              "ratio": 2.78
+            },
+            {
+              "ts": 1779379200000,
+              "ratio": 2.66
+            },
+            {
+              "ts": 1779292800000,
+              "ratio": 2.39
+            },
+            {
+              "ts": 1779206400000,
+              "ratio": 2.88
+            },
+            {
+              "ts": 1779120000000,
+              "ratio": 2.98
+            },
+            {
+              "ts": 1779033600000,
+              "ratio": 2.81
+            },
+            {
+              "ts": 1778947200000,
+              "ratio": 3.11
+            },
+            {
+              "ts": 1778860800000,
+              "ratio": 3.35
+            },
+            {
+              "ts": 1778774400000,
+              "ratio": 2.05
+            },
+            {
+              "ts": 1778688000000,
+              "ratio": 2.71
+            },
+            {
+              "ts": 1778601600000,
+              "ratio": 2.75
+            },
+            {
+              "ts": 1778515200000,
+              "ratio": 2.0
+            },
+            {
+              "ts": 1778428800000,
+              "ratio": 1.71
+            },
+            {
+              "ts": 1778342400000,
+              "ratio": 1.89
+            },
+            {
+              "ts": 1778256000000,
+              "ratio": 2.26
+            },
+            {
+              "ts": 1778169600000,
+              "ratio": 2.1
+            },
+            {
+              "ts": 1778083200000,
+              "ratio": 1.51
+            },
+            {
+              "ts": 1777996800000,
+              "ratio": 0.98
+            },
+            {
+              "ts": 1777910400000,
+              "ratio": 1.2
+            },
+            {
+              "ts": 1777824000000,
+              "ratio": 1.21
+            }
+          ],
+          "source": "OKX"
+        }
+      },
+      "signals": [
+        {
+          "label": "RSI(日)",
+          "state": "bull",
+          "value": "30",
+          "note": "超卖，短期反弹机会"
+        },
+        {
+          "label": "均线结构",
+          "state": "bear",
+          "value": "MA50<MA200",
+          "note": "空头排列（死叉之下）"
+        },
+        {
+          "label": "价 vs MA200",
+          "state": "bear",
+          "value": "-20.3%",
+          "note": "跌破年线"
+        },
+        {
+          "label": "MACD柱",
+          "state": "bear",
+          "value": "-7",
+          "note": "动能向下"
+        },
+        {
+          "label": "资金费率",
+          "state": "neutral",
+          "value": "0.010%",
+          "note": "正常区间"
+        },
+        {
+          "label": "多空账户比",
+          "state": "caution",
+          "value": "3.42",
+          "note": "散户过度做多，留意反向"
+        },
+        {
+          "label": "ETF 5日净流入",
+          "state": "bear",
+          "value": "$-286m",
+          "note": "场外资金净流出（看空）"
+        }
+      ]
+    }
+  },
+  "eth_btc": {
+    "ratio": 0.028348441521303974,
+    "change_30d": -0.041053748064720064
+  },
+  "sentiment": {
+    "value": 23,
+    "label": "Extreme Fear",
+    "history": [
+      {
+        "ts": 1772668800,
+        "value": 22,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1772755200,
+        "value": 18,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1772841600,
+        "value": 12,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1772928000,
+        "value": 12,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773014400,
+        "value": 8,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773100800,
+        "value": 13,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773187200,
+        "value": 15,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773273600,
+        "value": 18,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773360000,
+        "value": 15,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773446400,
+        "value": 16,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773532800,
+        "value": 15,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773619200,
+        "value": 23,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773705600,
+        "value": 28,
+        "label": "Fear"
+      },
+      {
+        "ts": 1773792000,
+        "value": 26,
+        "label": "Fear"
+      },
+      {
+        "ts": 1773878400,
+        "value": 23,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1773964800,
+        "value": 11,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774051200,
+        "value": 12,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774137600,
+        "value": 10,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774224000,
+        "value": 8,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774310400,
+        "value": 11,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774396800,
+        "value": 14,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774483200,
+        "value": 10,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774569600,
+        "value": 13,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774656000,
+        "value": 12,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774742400,
+        "value": 9,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774828800,
+        "value": 8,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1774915200,
+        "value": 11,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775001600,
+        "value": 8,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775088000,
+        "value": 12,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775174400,
+        "value": 9,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775260800,
+        "value": 11,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775347200,
+        "value": 12,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775433600,
+        "value": 13,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775520000,
+        "value": 11,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775606400,
+        "value": 17,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775692800,
+        "value": 14,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775779200,
+        "value": 16,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775865600,
+        "value": 15,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1775952000,
+        "value": 16,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1776038400,
+        "value": 12,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1776124800,
+        "value": 21,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1776211200,
+        "value": 23,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1776297600,
+        "value": 23,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1776384000,
+        "value": 21,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1776470400,
+        "value": 26,
+        "label": "Fear"
+      },
+      {
+        "ts": 1776556800,
+        "value": 27,
+        "label": "Fear"
+      },
+      {
+        "ts": 1776643200,
+        "value": 29,
+        "label": "Fear"
+      },
+      {
+        "ts": 1776729600,
+        "value": 33,
+        "label": "Fear"
+      },
+      {
+        "ts": 1776816000,
+        "value": 32,
+        "label": "Fear"
+      },
+      {
+        "ts": 1776902400,
+        "value": 46,
+        "label": "Fear"
+      },
+      {
+        "ts": 1776988800,
+        "value": 39,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777075200,
+        "value": 31,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777161600,
+        "value": 33,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777248000,
+        "value": 47,
+        "label": "Neutral"
+      },
+      {
+        "ts": 1777334400,
+        "value": 33,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777420800,
+        "value": 26,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777507200,
+        "value": 29,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777593600,
+        "value": 26,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777680000,
+        "value": 39,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777766400,
+        "value": 47,
+        "label": "Neutral"
+      },
+      {
+        "ts": 1777852800,
+        "value": 40,
+        "label": "Fear"
+      },
+      {
+        "ts": 1777939200,
+        "value": 50,
+        "label": "Neutral"
+      },
+      {
+        "ts": 1778025600,
+        "value": 46,
+        "label": "Fear"
+      },
+      {
+        "ts": 1778112000,
+        "value": 47,
+        "label": "Neutral"
+      },
+      {
+        "ts": 1778198400,
+        "value": 38,
+        "label": "Fear"
+      },
+      {
+        "ts": 1778284800,
+        "value": 38,
+        "label": "Fear"
+      },
+      {
+        "ts": 1778371200,
+        "value": 47,
+        "label": "Neutral"
+      },
+      {
+        "ts": 1778457600,
+        "value": 48,
+        "label": "Neutral"
+      },
+      {
+        "ts": 1778544000,
+        "value": 49,
+        "label": "Neutral"
+      },
+      {
+        "ts": 1778630400,
+        "value": 42,
+        "label": "Fear"
+      },
+      {
+        "ts": 1778716800,
+        "value": 34,
+        "label": "Fear"
+      },
+      {
+        "ts": 1778803200,
+        "value": 43,
+        "label": "Fear"
+      },
+      {
+        "ts": 1778889600,
+        "value": 31,
+        "label": "Fear"
+      },
+      {
+        "ts": 1778976000,
+        "value": 27,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779062400,
+        "value": 28,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779148800,
+        "value": 25,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1779235200,
+        "value": 27,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779321600,
+        "value": 29,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779408000,
+        "value": 28,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779494400,
+        "value": 28,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779580800,
+        "value": 25,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1779667200,
+        "value": 30,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779753600,
+        "value": 34,
+        "label": "Fear"
+      },
+      {
+        "ts": 1779840000,
+        "value": 25,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1779926400,
+        "value": 22,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1780012800,
+        "value": 23,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1780099200,
+        "value": 23,
+        "label": "Extreme Fear"
+      },
+      {
+        "ts": 1780185600,
+        "value": 28,
+        "label": "Fear"
+      },
+      {
+        "ts": 1780272000,
+        "value": 29,
+        "label": "Fear"
+      },
+      {
+        "ts": 1780358400,
+        "value": 23,
+        "label": "Extreme Fear"
+      }
+    ],
+    "source": "alternative.me"
+  },
+  "onchain": {
+    "mvrv": 1.3341,
+    "mvrvZscore": 0.6694,
+    "realizedPrice": 53548.77,
+    "nupl": 0.2504,
+    "sthMvrv": 0.93,
+    "sthRealizedPrice": 76988.52,
+    "puellMultiple": 0.7179,
+    "sopr": 0.9881,
+    "date": "2026-06-01",
+    "stale_fields": [],
+    "signals": [
+      {
+        "label": "价 vs 短期持有者成本",
+        "state": "bear",
+        "value": "$76,989",
+        "note": "价在 STH 成本之下：短期持有者整体亏损，常见恐慌/筑底区"
+      },
+      {
+        "label": "STH-MVRV",
+        "state": "bull",
+        "value": "0.93",
+        "note": "短期持有者亏损，抛压释放中"
+      },
+      {
+        "label": "SOPR",
+        "state": "bull",
+        "value": "0.988",
+        "note": "整体在亏损卖出（投降）"
+      }
+    ]
+  },
+  "cycle": {
+    "halving_date": "2024-04-20",
+    "days_since_halving": 773,
+    "phase_pct": 0.5301783264746228,
+    "next_halving_eta_days": 685,
+    "pi_cycle": {
+      "ma111": 72713.05747747747,
+      "ma350x2": 187104.51662857144,
+      "ratio": 0.38862267350725177,
+      "triggered": false
+    },
+    "mayer": {
+      "mayer": 0.8820367394104754,
+      "ma200": 79293.7492,
+      "zone": "偏弱 · 趋势之下"
+    },
+    "mvrvZscore": 0.6694,
+    "nupl": 0.2504,
+    "puell": 0.7179,
+    "realizedPrice": 53548.77,
+    "zone": "周期早中段（估值偏低-中性）",
+    "state": "bull",
+    "reasons": [
+      "MVRV-Z=0.67",
+      "Mayer=0.88（偏弱 · 趋势之下）",
+      "Pi Cycle 未触发(比值0.39)",
+      "NUPL=0.25"
+    ]
+  },
+  "etf": {
+    "BTC": {
+      "asset": "BTC",
+      "latest_date": "01 Jun 2026",
+      "latest": -483.8,
+      "sum5d": -1899.4,
+      "cumulative": 55230.0,
+      "recent": [
+        {
+          "date": "14 May 2026",
+          "flow": 131.3
+        },
+        {
+          "date": "15 May 2026",
+          "flow": -290.4
+        },
+        {
+          "date": "18 May 2026",
+          "flow": -648.6
+        },
+        {
+          "date": "19 May 2026",
+          "flow": -331.1
+        },
+        {
+          "date": "20 May 2026",
+          "flow": -70.5
+        },
+        {
+          "date": "21 May 2026",
+          "flow": -100.9
+        },
+        {
+          "date": "22 May 2026",
+          "flow": -105.2
+        },
+        {
+          "date": "26 May 2026",
+          "flow": -333.6
+        },
+        {
+          "date": "27 May 2026",
+          "flow": -733.4
+        },
+        {
+          "date": "28 May 2026",
+          "flow": -223.3
+        },
+        {
+          "date": "29 May 2026",
+          "flow": -125.3
+        },
+        {
+          "date": "01 Jun 2026",
+          "flow": -483.8
+        }
+      ],
+      "source": "farside.co.uk"
+    },
+    "ETH": {
+      "asset": "ETH",
+      "latest_date": "01 Jun 2026",
+      "latest": -44.5,
+      "sum5d": -286.1,
+      "cumulative": 11359.0,
+      "recent": [
+        {
+          "date": "14 May 2026",
+          "flow": -465.1
+        },
+        {
+          "date": "14 May 2026",
+          "flow": -5.6
+        },
+        {
+          "date": "15 May 2026",
+          "flow": -65.7
+        },
+        {
+          "date": "18 May 2026",
+          "flow": -86.4
+        },
+        {
+          "date": "19 May 2026",
+          "flow": -62.3
+        },
+        {
+          "date": "20 May 2026",
+          "flow": -28.1
+        },
+        {
+          "date": "21 May 2026",
+          "flow": -32.6
+        },
+        {
+          "date": "22 May 2026",
+          "flow": -6.6
+        },
+        {
+          "date": "26 May 2026",
+          "flow": -35.1
+        },
+        {
+          "date": "27 May 2026",
+          "flow": -67.1
+        },
+        {
+          "date": "28 May 2026",
+          "flow": -121.4
+        },
+        {
+          "date": "29 May 2026",
+          "flow": -18.0
+        },
+        {
+          "date": "01 Jun 2026",
+          "flow": -44.5
+        }
+      ],
+      "source": "farside.co.uk"
+    }
+  },
+  "narrative": null
+}

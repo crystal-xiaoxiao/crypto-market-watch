@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto 行情面板 · BTC / ETH</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#141925; --panel2:#1b2230; --line:#26304a;
+    --txt:#e6edf3; --dim:#8b98ab; --bull:#26d07c; --bear:#f6465d;
+    --caution:#f0b429; --neutral:#5b6b86; --accent:#4c8dff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1140px;margin:0 auto;padding:18px 16px 60px}
+  h1{font-size:20px;margin:0;font-weight:650}
+  h2{font-size:15px;margin:26px 0 12px;font-weight:600;color:var(--dim);
+    text-transform:uppercase;letter-spacing:.06em}
+  .sub{color:var(--dim);font-size:12px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:720px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .price{font-size:30px;font-weight:700;letter-spacing:-.5px}
+  .chg{font-size:13px;font-weight:600}
+  .up{color:var(--bull)} .down{color:var(--bear)}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .between{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;
+    font-size:12px;font-weight:600;border:1px solid transparent;white-space:nowrap}
+  .chip .v{font-weight:700}
+  .bull{background:rgba(38,208,124,.12);color:var(--bull);border-color:rgba(38,208,124,.3)}
+  .bear{background:rgba(246,70,93,.12);color:var(--bear);border-color:rgba(246,70,93,.3)}
+  .caution{background:rgba(240,180,41,.12);color:var(--caution);border-color:rgba(240,180,41,.3)}
+  .neutral{background:rgba(139,152,171,.12);color:var(--dim);border-color:rgba(139,152,171,.25)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  td,th{padding:7px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  td:first-child,th:first-child{text-align:left;color:var(--dim)}
+  .kv{display:flex;flex-direction:column;gap:3px}
+  .kv .k{font-size:11px;color:var(--dim)} .kv .val{font-size:17px;font-weight:650}
+  .note{font-size:11px;color:var(--dim)}
+  .bar{height:9px;background:var(--panel2);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .bar>span{display:block;height:100%;background:linear-gradient(90deg,#4c8dff,#26d07c)}
+  .verdict{padding:14px 16px;border-radius:12px;font-weight:600}
+  .ai{background:linear-gradient(135deg,#161d2e,#1a2336);
+    border:1px solid #2c3a5e;border-radius:14px;padding:18px}
+  .ai h3{margin:0 0 8px;font-size:14px;color:var(--accent)}
+  .ai .body{font-size:14.5px;white-space:pre-wrap;line-height:1.7}
+  .mini{height:46px}
+  .scaleline{position:relative;height:54px;margin-top:8px}
+  .scaleline .track{position:absolute;top:26px;left:0;right:0;height:4px;background:var(--line);border-radius:3px}
+  .scaleline .mk{position:absolute;transform:translateX(-50%);text-align:center;font-size:10px;color:var(--dim);top:30px}
+  .scaleline .mk .dot{width:9px;height:9px;border-radius:50%;margin:0 auto 3px}
+  .scaleline .price-mk{top:-2px}
+  footer{margin-top:34px;color:var(--dim);font-size:11px;text-align:center;line-height:1.8}
+  a{color:var(--accent);text-decoration:none}
+  .warn{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);color:var(--caution);
+    padding:8px 12px;border-radius:10px;font-size:12px;margin-top:10px}
+  .tag{font-size:10px;color:var(--dim);border:1px solid var(--line);border-radius:5px;padding:1px 5px;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="between">
+    <div>
+      <h1>Crypto 行情面板 <span class="sub">· BTC / ETH 技术面 · 链上筹码 · 四年周期</span></h1>
+      <div class="sub" id="updated">加载中…</div>
+    </div>
+  </div>
+
+  <div id="ai-wrap"></div>
+
+  <h2>价格</h2>
+  <div class="grid g3" id="price-cards"></div>
+
+  <h2>短期信号（1–3 个月）</h2>
+  <div class="grid g2" id="asset-signals"></div>
+
+  <h2>情绪 & 衍生品</h2>
+  <div class="grid g3" id="senti-cards"></div>
+
+  <h2>四年周期位置</h2>
+  <div id="cycle"></div>
+
+  <h2>链上筹码（Murphy 框架）</h2>
+  <div id="onchain"></div>
+
+  <h2>ETF 净流入（场外资金）</h2>
+  <div class="grid g2" id="etf"></div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const $ = (id)=>document.getElementById(id);
+const fmtUSD = (n,d=0)=> n==null?'—':'$'+Number(n).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const fmtPct = (n,dg=2)=> n==null?'—':(n*100>=0?'+':'')+(n*100).toFixed(dg)+'%';
+const fmtNum = (n,d=2)=> n==null?'—':Number(n).toFixed(d);
+const cls = (s)=> ({bull:'bull',bear:'bear',caution:'caution',neutral:'neutral'}[s]||'neutral');
+const chgCls = (n)=> n==null?'':(n>=0?'up':'down');
+
+function chip(s){
+  return `<span class="chip ${cls(s.state)}">${s.label} <span class="v">${s.value}</span></span>`;
+}
+
+function priceCard(a){
+  return `<div class="panel">
+    <div class="between"><div><b>${a.symbol.replace('USDT','')}</b> <span class="sub">${a.name}</span></div></div>
+    <div class="price">${fmtUSD(a.price, a.price<10?2:0)}</div>
+    <div class="row" style="margin-top:6px">
+      <span class="chg ${chgCls(a.change_24h)}">24h ${fmtPct(a.change_24h)}</span>
+      <span class="chg ${chgCls(a.change_7d)}">7d ${fmtPct(a.change_7d)}</span>
+      <span class="chg ${chgCls(a.change_30d)}">30d ${fmtPct(a.change_30d)}</span>
+    </div></div>`;
+}
+
+function assetSignalCard(a){
+  const t=a.technical, d=a.derivatives;
+  const sigs = (a.signals||[]).map(chip).join(' ');
+  const oi = d.open_interest? `${Number(d.open_interest.oi_ccy).toLocaleString('en-US',{maximumFractionDigits:0})} ${a.symbol.replace('USDT','')}`:'—';
+  return `<div class="panel">
+    <div class="between"><b>${a.symbol.replace('USDT','')}</b><span class="sub">RSI周 ${fmtNum(t.rsi14_w,0)}</span></div>
+    <div class="row" style="margin:10px 0 12px">${sigs}</div>
+    <table>
+      <tr><td>RSI(14,日)</td><td>${fmtNum(t.rsi14_d,1)}</td><td>MACD柱</td><td>${fmtNum(t.macd_hist,0)}</td></tr>
+      <tr><td>MA50 / MA200</td><td>${fmtUSD(t.ma50)} / ${fmtUSD(t.ma200)}</td><td>Mayer</td><td>${fmtNum(t.mayer&&t.mayer.mayer,2)}</td></tr>
+      <tr><td>布林 %B</td><td>${t.boll_pctb==null?'—':(t.boll_pctb*100).toFixed(0)+'%'}</td><td>资金费率</td><td>${d.funding&&d.funding.rate!=null?(d.funding.rate*100).toFixed(3)+'%':'—'}</td></tr>
+      <tr><td>持仓量(OI)</td><td>${oi}</td><td>多空账户比</td><td>${d.long_short&&d.long_short.ratio!=null?fmtNum(d.long_short.ratio,2):'—'}</td></tr>
+    </table></div>`;
+}
+
+function gauge(val,label){
+  // Fear&Greed gauge 0..100
+  const color = val<25?'var(--bear)':val<45?'var(--caution)':val<55?'var(--neutral)':val<75?'var(--bull)':'var(--bull)';
+  return `<div class="panel"><div class="kv"><span class="k">恐慌贪婪指数</span>
+    <div class="row"><span class="val" style="color:${color}">${val==null?'—':val}</span>
+    <span class="chip ${val<25?'bear':val>75?'caution':'neutral'}">${label||''}</span></div></div>
+    <div class="bar" style="margin-top:10px"><span style="width:${val||0}%;background:${color}"></span></div>
+    <canvas id="fngChart" class="mini" style="margin-top:8px"></canvas></div>`;
+}
+
+function ratioCard(r){
+  return `<div class="panel"><div class="kv"><span class="k">ETH / BTC 比值</span>
+    <div class="row"><span class="val">${fmtNum(r.ratio,4)}</span>
+    <span class="chg ${chgCls(r.change_30d)}">30d ${fmtPct(r.change_30d)}</span></div></div>
+    <div class="note" style="margin-top:8px">比值上行=ETH 相对强（偏 alt-season）；下行=资金回流 BTC（避险）。</div></div>`;
+}
+
+function cycleView(c){
+  const pct = Math.round((c.phase_pct||0)*100);
+  const metric = (k,v,sub)=>`<div class="panel"><div class="kv"><span class="k">${k}</span><span class="val">${v}</span><span class="note">${sub||''}</span></div></div>`;
+  const pi = c.pi_cycle||{};
+  return `<div class="panel verdict ${cls(c.state)}">
+      <div class="between"><span>周期位置：${c.zone}</span><span class="sub">${c.reasons.join(' · ')}</span></div>
+    </div>
+    <div class="panel" style="margin-top:12px">
+      <div class="between"><span class="note">第 4 次减半 ${c.halving_date} · 已 ${c.days_since_halving} 天</span>
+        <span class="note">距下次减半约 ${c.next_halving_eta_days} 天</span></div>
+      <div class="bar" style="margin-top:8px"><span style="width:${pct}%"></span></div>
+      <div class="note" style="margin-top:4px">四年周期进度 ≈ ${pct}%</div>
+    </div>
+    <div class="grid g3" style="margin-top:12px">
+      ${metric('MVRV-Z', fmtNum(c.mvrvZscore,2), '宏观估值；<0 底部 · >6 顶部')}
+      ${metric('Mayer (价/200DMA)', fmtNum(c.mayer&&c.mayer.mayer,2), c.mayer&&c.mayer.zone||'')}
+      ${metric('Pi Cycle', pi.triggered==null?'—':(pi.triggered?'已触发⚠':'未触发'), pi.ratio!=null?'111DMA/2×350DMA = '+fmtNum(pi.ratio,2):'')}
+      ${metric('NUPL', fmtNum(c.nupl,2), '净未实现盈亏')}
+      ${metric('Puell Multiple', fmtNum(c.puell,2), '矿工收入估值')}
+      ${metric('Realized Price', fmtUSD(c.realizedPrice), '全市场平均成本')}
+    </div>`;
+}
+
+function onchainView(o, btcPrice){
+  if(!o){return '<div class="panel">链上数据加载中…</div>';}
+  const sigs=(o.signals||[]).map(chip).join(' ');
+  const stale = (o.stale_fields&&o.stale_fields.length)? `<div class="warn">部分链上指标为上次缓存值（数据源限频）：${o.stale_fields.join(', ')}</div>`:'';
+  // cost-basis line: place price between realized price and STH cost
+  const lines=[['Realized Price',o.realizedPrice,'var(--accent)'],['STH 成本',o.sthRealizedPrice,'var(--caution)']].filter(x=>x[1]);
+  const all=lines.map(l=>l[1]).concat(btcPrice).filter(Boolean);
+  const min=Math.min(...all)*0.97, max=Math.max(...all)*1.03, span=max-min||1;
+  const posOf=(v)=>((v-min)/span*100).toFixed(1);
+  let marks=lines.map(l=>`<div class="mk" style="left:${posOf(l[1])}%"><div class="dot" style="background:${l[2]}"></div>${l[0]}<br>${fmtUSD(l[1])}</div>`).join('');
+  marks+=`<div class="mk price-mk" style="left:${posOf(btcPrice)}%"><div class="dot" style="background:#fff"></div><b>现价</b><br>${fmtUSD(btcPrice)}</div>`;
+  const metric=(k,v,sub)=>`<div class="panel"><div class="kv"><span class="k">${k}</span><span class="val">${v}</span><span class="note">${sub||''}</span></div></div>`;
+  return `<div class="panel">
+      <div class="note">关键成本线 vs 现价（Murphy：成本线即支撑/压力）<span class="tag">仅 BTC</span></div>
+      <div class="scaleline"><div class="track"></div>${marks}</div>
+    </div>
+    <div class="row" style="margin:12px 0">${sigs}</div>
+    <div class="grid g4">
+      ${metric('MVRV', fmtNum(o.mvrv,2), '市值/已实现值')}
+      ${metric('STH-MVRV', fmtNum(o.sthMvrv,2), '短期持有者盈亏')}
+      ${metric('SOPR', fmtNum(o.sopr,3), '<1 亏损卖出')}
+      ${metric('NUPL', fmtNum(o.nupl,2), '净未实现盈亏')}
+    </div>${stale}
+    <div class="note" style="margin-top:10px">完整 URPD 筹码分布图（付费数据）参考：
+      <a href="https://www.bitcoinmagazinepro.com/charts/realized-price-distribution/" target="_blank">Realized Price Distribution ↗</a>
+      · KOL <a href="https://x.com/Murphychen888" target="_blank">@Murphychen888 ↗</a></div>`;
+}
+
+function etfView(e,label){
+  if(!e){return `<div class="panel"><b>${label} ETF</b><div class="note">数据加载中…</div></div>`;}
+  const st=e.sum5d>200?'bull':e.sum5d<-200?'bear':'neutral';
+  return `<div class="panel">
+    <div class="between"><b>${label} 现货 ETF</b><span class="sub">截至 ${e.latest_date}</span></div>
+    <div class="row" style="margin:8px 0 12px">
+      <span class="chip ${e.latest>0?'bull':e.latest<0?'bear':'neutral'}">当日 <span class="v">${e.latest>0?'+':''}${e.latest}m</span></span>
+      <span class="chip ${st}">近5日 <span class="v">${e.sum5d>0?'+':''}${Math.round(e.sum5d)}m</span></span>
+      <span class="chip neutral">累计 <span class="v">$${(e.cumulative/1000).toFixed(1)}B</span></span>
+    </div>
+    <canvas id="etf-${label}" class="mini"></canvas></div>`;
+}
+
+function makeMiniBar(id, points, key){
+  const el=$(id); if(!el||!points) return;
+  new Chart(el,{type:'bar',data:{labels:points.map(p=>p.date||''),
+    datasets:[{data:points.map(p=>p[key]),backgroundColor:points.map(p=>p[key]>=0?'#26d07c':'#f6465d')}]},
+    options:{plugins:{legend:{display:false},tooltip:{enabled:true}},
+      scales:{x:{display:false},y:{display:false}},maintainAspectRatio:false}});
+}
+function makeMiniLine(id, points, key){
+  const el=$(id); if(!el||!points) return;
+  new Chart(el,{type:'line',data:{labels:points.map((_,i)=>i),
+    datasets:[{data:points.map(p=>p[key]),borderColor:'#4c8dff',borderWidth:1.5,pointRadius:0,fill:false,tension:.3}]},
+    options:{plugins:{legend:{display:false}},scales:{x:{display:false},y:{display:false}},maintainAspectRatio:false}});
+}
+
+async function load(){
+  let d;
+  try{ d = await (await fetch('data.json?t='+Date.now())).json(); }
+  catch(e){ $('updated').textContent='数据加载失败：'+e; return; }
+
+  $('updated').textContent = `更新于 ${d.meta.generated_at} · 数据日期 ${d.meta.data_date}`;
+
+  // AI narrative
+  if(d.narrative && d.narrative.text){
+    $('ai-wrap').innerHTML = `<div class="ai"><h3>🤖 每日 AI 解读</h3><div class="body">${d.narrative.text}</div>
+      <div class="note" style="margin-top:10px">生成于 ${d.narrative.generated_at||''} · 仅供研究参考，非投资建议</div></div>`;
+  }
+
+  $('price-cards').innerHTML = priceCard(d.assets.BTC)+priceCard(d.assets.ETH)+ratioCard(d.eth_btc);
+  $('asset-signals').innerHTML = assetSignalCard(d.assets.BTC)+assetSignalCard(d.assets.ETH);
+
+  const s=d.sentiment||{};
+  $('senti-cards').innerHTML = gauge(s.value, s.label)
+    + `<div class="panel"><div class="kv"><span class="k">BTC 资金费率 / 多空比</span>
+        <span class="val">${d.assets.BTC.derivatives.funding.rate!=null?(d.assets.BTC.derivatives.funding.rate*100).toFixed(3)+'%':'—'}
+        <span class="sub">/ ${fmtNum(d.assets.BTC.derivatives.long_short&&d.assets.BTC.derivatives.long_short.ratio,2)}</span></span>
+        <span class="note">费率高=多头拥挤；比值>2=散户过度做多</span></div>
+        <canvas id="lsChart" class="mini" style="margin-top:8px"></canvas></div>`
+    + `<div class="panel"><div class="kv"><span class="k">ETH 资金费率 / 多空比</span>
+        <span class="val">${d.assets.ETH.derivatives.funding.rate!=null?(d.assets.ETH.derivatives.funding.rate*100).toFixed(3)+'%':'—'}
+        <span class="sub">/ ${fmtNum(d.assets.ETH.derivatives.long_short&&d.assets.ETH.derivatives.long_short.ratio,2)}</span></span>
+        <span class="note">两者皆为短期情绪温度计</span></div></div>`;
+
+  $('cycle').innerHTML = cycleView(d.cycle);
+  $('onchain').innerHTML = onchainView(d.onchain, d.assets.BTC.price);
+  $('etf').innerHTML = etfView(d.etf.BTC,'BTC')+etfView(d.etf.ETH,'ETH');
+
+  $('footer').innerHTML = `数据源：价格 ${d.meta.sources.price} · 衍生品 ${d.meta.sources.derivatives}
+    · 情绪 ${d.meta.sources.sentiment} · 链上 ${d.meta.sources.onchain} · ETF ${d.meta.sources.etf}<br>
+    本面板仅供个人投研参考，不构成投资建议。加密资产波动剧烈，注意风险。`
+    + (d.meta.warnings&&d.meta.warnings.length?`<br><span style="color:var(--caution)">本次构建警告 ${d.meta.warnings.length} 条</span>`:'');
+
+  // charts
+  if(s.history) makeMiniLine('fngChart', s.history, 'value');
+  const ls=d.assets.BTC.derivatives.long_short;
+  if(ls&&ls.history) makeMiniLine('lsChart', [...ls.history].reverse(), 'ratio');
+  if(d.etf.BTC) makeMiniBar('etf-BTC', d.etf.BTC.recent, 'flow');
+  if(d.etf.ETH) makeMiniBar('etf-ETH', d.etf.ETH.recent, 'flow');
+}
+load();
+</script>
+</body>
+</html>

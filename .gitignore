@@ -1,0 +1,7 @@
+# local dev artifacts
+scripts/_probe*.py
+scripts/_dbg*.py
+scripts/_test_*.py
+__pycache__/
+*.pyc
+.env
