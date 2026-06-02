@@ -161,14 +161,31 @@ def _num(text: str) -> Optional[float]:
     return -v if neg else v
 
 
+def _farside_html(asset: str) -> str:
+    """Fetch the farside page HTML.
+
+    Direct works from residential IPs but Cloudflare 403s datacenter IPs (e.g.
+    GitHub Actions). Fall back to the keyless Jina reader proxy, which fetches
+    server-side and returns the same table HTML.
+    """
+    direct = f"https://farside.co.uk/{asset}/"
+    try:
+        return _get(direct, json_out=False, tries=1)
+    except SourceError:
+        pass
+    proxy = f"https://r.jina.ai/https://farside.co.uk/{asset}/"
+    hdr = dict(HEADERS)
+    hdr["X-Return-Format"] = "html"
+    return _get(proxy, json_out=False, tries=2, timeout=45, headers=hdr)
+
+
 def etf_flows(asset: str) -> dict:
     """Parse farside spot-ETF net-flow table. asset = 'btc' or 'eth'.
 
     Returns latest daily total net flow ($m), trailing 5-day sum, and cumulative
     total ($m). Flows in USD millions.
     """
-    url = f"https://farside.co.uk/{asset}/"
-    html = _get(url, json_out=False)
+    html = _farside_html(asset)
     soup = BeautifulSoup(html, "html.parser")
     date_re = re.compile(r"^\d{1,2} \w{3} \d{4}$")
     # The page has several tables (nav, etc.); pick the one whose first column
@@ -207,6 +224,14 @@ def etf_flows(asset: str) -> dict:
                 daily_totals.append((label, tot))
     if not daily_totals:
         raise SourceError(f"farside {asset}: no data rows parsed")
+    # de-dup by date (keep last), preserving order
+    seen, deduped = {}, []
+    for dt, tot in daily_totals:
+        seen[dt] = tot
+    for dt, tot in daily_totals:
+        if dt in seen:
+            deduped.append((dt, seen.pop(dt)))
+    daily_totals = deduped
     latest_date, latest = daily_totals[-1]
     last5 = sum(t for _, t in daily_totals[-5:])
     return {"asset": asset.upper(), "latest_date": latest_date, "latest": latest,
