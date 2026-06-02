@@ -16,7 +16,8 @@ from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "docs", "data.json")
-MODEL = os.environ.get("CLAUDE_MODEL", "claude-opus-4-8")
+# `or` (not get-default) so an empty CLAUDE_MODEL env var still falls back
+MODEL = os.environ.get("CLAUDE_MODEL") or "claude-opus-4-8"
 
 
 def compact(d: dict) -> dict:
