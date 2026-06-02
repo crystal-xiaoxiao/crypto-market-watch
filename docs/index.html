@@ -55,6 +55,16 @@
   /* 固定高度的相对定位容器，防止 Chart.js 画布无限增高 */
   .minibox{position:relative;height:48px;margin-top:8px;width:100%}
   .minibox>canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+  /* 减半周期时间轴 */
+  .tl{position:relative;height:84px;margin:18px 4px 8px}
+  .tl .axis{position:absolute;top:42px;left:0;right:0;height:6px;background:var(--panel2);border:1px solid var(--line);border-radius:4px}
+  .tl .zone{position:absolute;top:38px;height:14px;border-radius:4px}
+  .tl .ztop{background:rgba(240,180,41,.30);border:1px solid var(--caution)}
+  .tl .zbot{background:rgba(38,208,124,.30);border:1px solid var(--bull)}
+  .tl .zlab{position:absolute;top:58px;transform:translateX(-50%);font-size:10px;white-space:nowrap}
+  .tl .end{position:absolute;top:56px;transform:translateX(-50%);font-size:10px;color:var(--dim);text-align:center;line-height:1.3}
+  .tl .now{position:absolute;top:24px;width:2px;height:42px;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.6)}
+  .tl .nowlab{position:absolute;top:4px;transform:translateX(-50%);font-size:10px;color:#fff;font-weight:700;white-space:nowrap}
   .scaleline{position:relative;height:54px;margin-top:8px}
   .scaleline .track{position:absolute;top:26px;left:0;right:0;height:4px;background:var(--line);border-radius:3px}
   .scaleline .mk{position:absolute;transform:translateX(-50%);text-align:center;font-size:10px;color:var(--dim);top:30px}
@@ -155,17 +165,65 @@ function ratioCard(r){
 }
 
 function cycleView(c){
-  const pct = Math.round((c.phase_pct||0)*100);
   const metric = (k,v,sub)=>`<div class="panel"><div class="kv"><span class="k">${k}</span><span class="val">${v}</span><span class="note">${sub||''}</span></div></div>`;
   const pi = c.pi_cycle||{};
-  return `<div class="panel verdict ${cls(c.state)}">
-      <div class="between"><span>周期位置：${c.zone}</span><span class="sub">${c.reasons.join(' · ')}</span></div>
+  const b = c.bottom||{}, tw = c.top_window||{};
+  const total = (c.days_since_halving||0)+(c.next_halving_eta_days||0) || 1458;
+  const P = (d)=>Math.max(0,Math.min(100, d/total*100));      // day-offset -> % of cycle
+  const mo = (d)=>(d/30.4).toFixed(1);
+
+  // headline: distance to the historically-typical bear-market bottom
+  let bh, bstate='neutral', tl='', hist='';
+  if(!b || !b.offsets){
+    bh = '周期底部测算更新中（等待下一次数据构建）…';
+    return `<div class="panel verdict neutral"><div>${bh}</div></div>
+      <div class="panel verdict ${cls(c.state)}" style="margin-top:12px">
+        <div class="between"><span>链上估值位置：${c.zone}</span><span class="sub">${c.reasons.join(' · ')}</span></div></div>
+      <div class="grid g3" style="margin-top:12px">
+        ${metric('MVRV-Z', fmtNum(c.mvrvZscore,2), '宏观估值；<0 底部 · >6 顶部')}
+        ${metric('Mayer (价/200DMA)', fmtNum(c.mayer&&c.mayer.mayer,2), c.mayer&&c.mayer.zone||'')}
+        ${metric('Pi Cycle', pi.triggered==null?'—':(pi.triggered?'已触发⚠':'未触发'), pi.ratio!=null?'111DMA/2×350DMA = '+fmtNum(pi.ratio,2):'')}
+        ${metric('NUPL', fmtNum(c.nupl,2), '净未实现盈亏')}
+        ${metric('Puell Multiple', fmtNum(c.puell,2), '矿工收入估值')}
+        ${metric('Realized Price', fmtUSD(c.realizedPrice), '全市场平均成本')}
+      </div>`;
+  }
+  if(b.phase==='before'){
+    bstate='bull';
+    bh = `距历史熊底窗口下沿还有 <b>${b.days_to_window_start}</b> 天即进入；`
+       + `中位熊底约 <b>${b.median_date}</b>（还有 <b>${b.days_to_median}</b> 天 ≈ <b>${mo(b.days_to_median)}</b> 个月）`;
+  } else if(b.phase==='within'){
+    bstate='bull';
+    const md = b.days_to_median>=0 ? `距中位还有 ${b.days_to_median} 天` : `已过中位 ${-b.days_to_median} 天`;
+    bh = `<b>已进入历史熊底窗口</b>（${b.window_start_date} ~ ${b.window_end_date}）；中位 ${b.median_date}，${md}`;
+  } else {
+    bstate='neutral';
+    bh = `已越过历史熊底窗口（${b.window_end_date} 之后）；后续以链上估值指标为准`;
+  }
+
+  tl = `<div class="tl">
+      <div class="axis"></div>
+      <div class="zone ztop" style="left:${P(tw.start_offset)}%;width:${P(tw.end_offset)-P(tw.start_offset)}%"></div>
+      <div class="zlab" style="left:${(P(tw.start_offset)+P(tw.end_offset))/2}%;color:var(--caution)">历史顶部区</div>
+      <div class="zone zbot" style="left:${P((b.offsets||[0])[0])}%;width:${P((b.offsets||[0,0,0])[2])-P((b.offsets||[0])[0])}%"></div>
+      <div class="zlab" style="left:${P(b.median_offset)}%;color:var(--bull)">历史熊底区</div>
+      <div class="end" style="left:0%">减半<br>${c.halving_date}</div>
+      <div class="end" style="left:100%">下次减半</div>
+      <div class="now" style="left:${P(c.days_since_halving)}%"></div>
+      <div class="nowlab" style="left:${P(c.days_since_halving)}%">现在 · 减半后${c.days_since_halving}天</div>
+    </div>`;
+
+  hist = (c.historical_cycles||[]).map(h=>`${h.bottom}（+${h.bottom_offset}天）`).join(' · ');
+
+  return `<div class="panel verdict ${bstate}">
+      <div style="font-size:13px;color:var(--dim);margin-bottom:4px">距历史规律性熊市底部</div>
+      <div style="font-size:15px;line-height:1.6">${bh}</div>
+      ${tl}
+      <div class="note">熊底窗口取前三轮"减半→触底"实测区间：${hist}（中位 +${b.median_offset}天）。
+        注：减半后约1.5年(≈547天)历史上是周期<b>顶部</b>，非底部。</div>
     </div>
-    <div class="panel" style="margin-top:12px">
-      <div class="between"><span class="note">第 4 次减半 ${c.halving_date} · 已 ${c.days_since_halving} 天</span>
-        <span class="note">距下次减半约 ${c.next_halving_eta_days} 天</span></div>
-      <div class="bar" style="margin-top:8px"><span style="width:${pct}%"></span></div>
-      <div class="note" style="margin-top:4px">四年周期进度 ≈ ${pct}%</div>
+    <div class="panel verdict ${cls(c.state)}" style="margin-top:12px">
+      <div class="between"><span>链上估值位置：${c.zone}</span><span class="sub">${c.reasons.join(' · ')}</span></div>
     </div>
     <div class="grid g3" style="margin-top:12px">
       ${metric('MVRV-Z', fmtNum(c.mvrvZscore,2), '宏观估值；<0 底部 · >6 顶部')}

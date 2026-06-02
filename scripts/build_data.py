@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone, date, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import indicators as ind
@@ -21,6 +21,19 @@ OUT = os.path.join(ROOT, "docs", "data.json")
 
 HALVING_DATE = date(2024, 4, 20)      # 4th Bitcoin halving
 CYCLE_DAYS = 1458                      # ~4 years between halvings
+
+# Historical "halving -> bear-market bottom" intervals, from the prior 3 cycles.
+# Used to project this cycle's bottoming window (what Crystal wants: "how long
+# until the historically-typical bottom"). Note: the bottom has consistently
+# landed ~2.1-2.5 yr after the halving; ~1.5 yr post-halving was the cycle TOP.
+HISTORICAL_CYCLES = [
+    {"halving": "2012-11-28", "top": "2013-11-30", "bottom": "2015-01-14",
+     "top_offset": 367, "bottom_offset": 777},
+    {"halving": "2016-07-09", "top": "2017-12-17", "bottom": "2018-12-15",
+     "top_offset": 526, "bottom_offset": 889},
+    {"halving": "2020-05-11", "top": "2021-11-10", "bottom": "2022-11-21",
+     "top_offset": 548, "bottom_offset": 924},
+]
 
 
 def closes(candles):
@@ -201,12 +214,50 @@ def cycle_block(btc_daily, oc: dict, mayer: dict, today: date) -> dict:
                        else f"未触发(比值{pi['ratio']:.2f})"))
     if nupl is not None:
         reasons.append(f"NUPL={nupl:.2f}")
+
+    bottom = bottom_projection(days_since, today)
     return {
         "halving_date": HALVING_DATE.isoformat(), "days_since_halving": days_since,
         "phase_pct": phase_pct, "next_halving_eta_days": max(0, CYCLE_DAYS - days_since),
         "pi_cycle": pi, "mayer": mayer, "mvrvZscore": mvrvz, "nupl": nupl,
         "puell": oc.get("puellMultiple"), "realizedPrice": oc.get("realizedPrice"),
         "zone": zone, "state": state, "reasons": reasons,
+        "bottom": bottom, "historical_cycles": HISTORICAL_CYCLES,
+        "top_window": {  # for the timeline (historical top zone)
+            "start_offset": min(c["top_offset"] for c in HISTORICAL_CYCLES),
+            "end_offset": max(c["top_offset"] for c in HISTORICAL_CYCLES),
+        },
+    }
+
+
+def bottom_projection(days_since: int, today: date) -> dict:
+    """Project this cycle's bear-bottom window from the prior 3 cycles' offsets.
+
+    Answers Crystal's question directly: how many days until the historically-
+    typical bottom (window low / median / high), and whether we're before, inside,
+    or past that window.
+    """
+    offsets = sorted(c["bottom_offset"] for c in HISTORICAL_CYCLES)  # 777, 889, 924
+    lo, mid, hi = offsets[0], offsets[len(offsets) // 2], offsets[-1]
+    mean = round(sum(offsets) / len(offsets))
+
+    def proj_date(off):
+        return (HALVING_DATE + timedelta(days=off)).isoformat()
+
+    if days_since < lo:
+        phase = "before"      # 还没进入历史熊底窗口
+    elif days_since <= hi:
+        phase = "within"      # 正处于历史熊底窗口
+    else:
+        phase = "after"       # 已越过历史熊底窗口
+    return {
+        "offsets": offsets, "median_offset": mid, "mean_offset": mean,
+        "window_start_date": proj_date(lo), "median_date": proj_date(mid),
+        "window_end_date": proj_date(hi),
+        "days_to_window_start": lo - days_since,
+        "days_to_median": mid - days_since,
+        "days_to_window_end": hi - days_since,
+        "phase": phase,
     }
 
 
