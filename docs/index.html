@@ -52,7 +52,9 @@
     border:1px solid #2c3a5e;border-radius:14px;padding:18px}
   .ai h3{margin:0 0 8px;font-size:14px;color:var(--accent)}
   .ai .body{font-size:14.5px;white-space:pre-wrap;line-height:1.7}
-  .mini{height:46px}
+  /* 固定高度的相对定位容器，防止 Chart.js 画布无限增高 */
+  .minibox{position:relative;height:48px;margin-top:8px;width:100%}
+  .minibox>canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
   .scaleline{position:relative;height:54px;margin-top:8px}
   .scaleline .track{position:absolute;top:26px;left:0;right:0;height:4px;background:var(--line);border-radius:3px}
   .scaleline .mk{position:absolute;transform:translateX(-50%);text-align:center;font-size:10px;color:var(--dim);top:30px}
@@ -142,7 +144,7 @@ function gauge(val,label){
     <div class="row"><span class="val" style="color:${color}">${val==null?'—':val}</span>
     <span class="chip ${val<25?'bear':val>75?'caution':'neutral'}">${label||''}</span></div></div>
     <div class="bar" style="margin-top:10px"><span style="width:${val||0}%;background:${color}"></span></div>
-    <canvas id="fngChart" class="mini" style="margin-top:8px"></canvas></div>`;
+    <div class="minibox"><canvas id="fngChart"></canvas></div></div>`;
 }
 
 function ratioCard(r){
@@ -213,7 +215,7 @@ function etfView(e,label){
       <span class="chip ${st}">近5日 <span class="v">${e.sum5d>0?'+':''}${Math.round(e.sum5d)}m</span></span>
       <span class="chip neutral">累计 <span class="v">$${(e.cumulative/1000).toFixed(1)}B</span></span>
     </div>
-    <canvas id="etf-${label}" class="mini"></canvas></div>`;
+    <div class="minibox"><canvas id="etf-${label}"></canvas></div></div>`;
 }
 
 function makeMiniBar(id, points, key){
@@ -252,7 +254,7 @@ async function load(){
         <span class="val">${d.assets.BTC.derivatives.funding.rate!=null?(d.assets.BTC.derivatives.funding.rate*100).toFixed(3)+'%':'—'}
         <span class="sub">/ ${fmtNum(d.assets.BTC.derivatives.long_short&&d.assets.BTC.derivatives.long_short.ratio,2)}</span></span>
         <span class="note">费率高=多头拥挤；比值>2=散户过度做多</span></div>
-        <canvas id="lsChart" class="mini" style="margin-top:8px"></canvas></div>`
+        <div class="minibox"><canvas id="lsChart"></canvas></div></div>`
     + `<div class="panel"><div class="kv"><span class="k">ETH 资金费率 / 多空比</span>
         <span class="val">${d.assets.ETH.derivatives.funding.rate!=null?(d.assets.ETH.derivatives.funding.rate*100).toFixed(3)+'%':'—'}
         <span class="sub">/ ${fmtNum(d.assets.ETH.derivatives.long_short&&d.assets.ETH.derivatives.long_short.ratio,2)}</span></span>
