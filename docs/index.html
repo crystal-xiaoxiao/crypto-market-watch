@@ -111,6 +111,7 @@
 
 <script>
 const $ = (id)=>document.getElementById(id);
+const escHtml = (s)=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const fmtUSD = (n,d=0)=> n==null?'—':'$'+Number(n).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
 const fmtPct = (n,dg=2)=> n==null?'—':(n*100>=0?'+':'')+(n*100).toFixed(dg)+'%';
 const fmtNum = (n,d=2)=> n==null?'—':Number(n).toFixed(d);
@@ -299,7 +300,7 @@ async function load(){
 
   // AI narrative
   if(d.narrative && d.narrative.text){
-    $('ai-wrap').innerHTML = `<div class="ai"><h3>🤖 每日 AI 解读</h3><div class="body">${d.narrative.text}</div>
+    $('ai-wrap').innerHTML = `<div class="ai"><h3>🤖 每日 AI 解读</h3><div class="body">${escHtml(d.narrative.text)}</div>
       <div class="note" style="margin-top:10px">生成于 ${d.narrative.generated_at||''} · 仅供研究参考，非投资建议</div></div>`;
   }
 
